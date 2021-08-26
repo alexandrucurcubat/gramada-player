@@ -7,6 +7,10 @@
     headerPosition="below"
     mat-align-tabs="center"
     backgroundColor="primary"
+    #tabGroup
+    [selectedIndex]="selectedTab"
+    (touchstart)="onSwipe($event, 'start')"
+    (touchend)="onSwipe($event, 'end')"
   >
     <mat-tab>
       <ng-template mat-tab-label>

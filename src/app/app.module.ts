@@ -10,6 +10,7 @@ import { YoutubePlayerComponent } from './youtube-player/youtube-player.componen
 import { SearchComponent } from './search/search.component';
 import { AccountComponent } from './account/account.component';
 import { PlaylistComponent } from './playlist/playlist.component';
+import { RemoveVideoDialogComponent } from './playlist/remove-video-dialog/remove-video-dialog.component';
 
 @NgModule({
   declarations: [
@@ -18,6 +19,7 @@ import { PlaylistComponent } from './playlist/playlist.component';
     SearchComponent,
     AccountComponent,
     PlaylistComponent,
+    RemoveVideoDialogComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,39 @@
+mat-selection-list {
+  padding-top: 0;
+}
+
+::ng-deep {
+  .mat-list-text {
+    padding-right: 0 !important;
+  }
+}
+
+.list-item {
+  display: flex !important;
+  align-items: center;
+  justify-content: space-between;
+  white-space: nowrap;
+  &-content {
+    overflow: hidden;
+  }
+}
+
+.playlist-header {
+  display: flex;
+  justify-content: space-around;
+  padding: 0.5rem 1rem;
+}
+
+.playlist-empty {
+  padding: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  mat-icon {
+    margin: 1rem;
+    transform: scale(3);
+  }
+  .empty-message {
+    text-align: center;
+  }
+}

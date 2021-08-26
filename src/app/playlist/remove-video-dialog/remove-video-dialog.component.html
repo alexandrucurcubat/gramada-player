@@ -1,0 +1,9 @@
+<mat-dialog-content class="mat-typography">
+  <small>{{ data.videoName }}</small>
+  <mat-divider></mat-divider>
+  <div>Remove this video from the playlist?</div>
+</mat-dialog-content>
+<mat-dialog-actions align="center">
+  <button mat-button color="primary" [mat-dialog-close]="false">Cancel</button>
+  <button mat-button color="warn" [mat-dialog-close]="true">Remove</button>
+</mat-dialog-actions>
