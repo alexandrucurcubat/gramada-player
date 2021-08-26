@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 
-import { RemoveVideoDialogComponent } from './remove-video-dialog/remove-video-dialog.component';
+import { YoutubePlayerService } from '../../youtube-player/youtube-player.service';
 
 type Video = {
   videoId: string;
@@ -12,11 +11,11 @@ type Video = {
 };
 
 @Component({
-  selector: 'app-playlist',
-  templateUrl: './playlist.component.html',
-  styleUrls: ['./playlist.component.scss'],
+  selector: 'app-playlist-actions',
+  templateUrl: './playlist-actions.component.html',
+  styleUrls: ['./playlist-actions.component.scss'],
 })
-export class PlaylistComponent implements OnInit {
+export class PlaylistActionsComponent implements OnInit {
   isPlaying$!: Observable<boolean>;
   isMuted$!: Observable<boolean>;
 
@@ -47,16 +46,26 @@ export class PlaylistComponent implements OnInit {
     },
   ];
 
-  constructor(public dialog: MatDialog) {}
+  constructor(private playerService: YoutubePlayerService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.isPlaying$ = this.playerService.isPlaying$;
+    this.isMuted$ = this.playerService.isMuted$;
+  }
 
-  onRemove(videoName: string) {
-    const dialogRef = this.dialog.open(RemoveVideoDialogComponent, {
-      data: { videoName },
-    });
-    dialogRef.afterClosed().subscribe((result: boolean) => {
-      console.log('remove video', result);
-    });
+  onPlay() {
+    this.playerService.play();
+  }
+
+  onPause() {
+    this.playerService.pause();
+  }
+
+  onMute() {
+    this.playerService.mute();
+  }
+
+  onUnMute() {
+    this.playerService.unMute();
   }
 }

@@ -1,38 +1,13 @@
-<div class="playlist-header">
-  <button
-    mat-mini-fab
-    color="primary"
-    (click)="onPlay()"
-    *ngIf="!(isPlaying$ | async)"
-  >
-    <mat-icon>play_arrow</mat-icon>
-  </button>
-  <button mat-mini-fab (click)="onPause()" *ngIf="isPlaying$ | async">
-    <mat-icon>pause</mat-icon>
-  </button>
-  <button mat-mini-fab (click)="onMute()" *ngIf="!(isMuted$ | async)">
-    <mat-icon>volume_off</mat-icon>
-  </button>
-  <button
-    mat-mini-fab
-    color="primary"
-    (click)="onUnMute()"
-    *ngIf="isMuted$ | async"
-  >
-    <mat-icon>volume_up</mat-icon>
-  </button>
-  <button mat-mini-fab color="warn" [disabled]="playlist.length === 0">
-    <mat-icon>skip_next</mat-icon>
-  </button>
-</div>
+<app-playlist-actions></app-playlist-actions>
+<mat-divider></mat-divider>
 <mat-selection-list
   [multiple]="false"
   *ngIf="playlist.length > 0; else emptyPlaylist"
 >
   <mat-list-option *ngFor="let video of playlist">
     <mat-icon mat-list-icon>audiotrack</mat-icon>
-    <div class="list-item">
-      <div class="list-item-content">
+    <div class="playlist-item">
+      <div class="playlist-item-content">
         <div mat-line>
           <small>{{ video.name }}</small>
         </div>
@@ -52,9 +27,7 @@
 </mat-selection-list>
 <ng-template #emptyPlaylist>
   <div class="playlist-empty">
-    <div class="empty-message">
-      <h1>No videos</h1>
-      <mat-icon>sentiment_dissatisfied</mat-icon>
-    </div>
+    <h1>No videos</h1>
+    <mat-icon>sentiment_dissatisfied</mat-icon>
   </div>
 </ng-template>
