@@ -1,5 +1,14 @@
 {
   "projects": {
     "default": "gramada-player"
+  },
+  "targets": {
+    "gramada-player": {
+      "hosting": {
+        "gramada-player": [
+          "gramada-player"
+        ]
+      }
+    }
   }
 }
