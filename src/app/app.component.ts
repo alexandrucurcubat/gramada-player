@@ -1,26 +1,10 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
-import { MatTabGroup } from '@angular/material/tabs';
-
-import { SwiperService } from './services/swiper.service';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent implements AfterViewInit {
-  @ViewChild('tabGroup') tabGroup!: MatTabGroup;
-  selectedTab!: number;
-
+export class AppComponent {
   videoId = 'Kd5BWEuqf1s';
-
-  constructor(private swiperService: SwiperService) {}
-
-  ngAfterViewInit() {
-    this.swiperService.initTabGroup(this.tabGroup);
-  }
-
-  onSwipe(event: TouchEvent, when: string) {
-    this.swiperService.swipe(event, when);
-  }
 }
