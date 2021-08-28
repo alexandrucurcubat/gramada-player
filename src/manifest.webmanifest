@@ -1,8 +1,8 @@
 {
-  "name": "gramada-player",
-  "short_name": "gramada-player",
-  "theme_color": "#1976d2",
-  "background_color": "#fafafa",
+  "name": "Gramada Player",
+  "short_name": "Gramada Player",
+  "theme_color": "#009688",
+  "background_color": "#303030",
   "display": "standalone",
   "scope": "./",
   "start_url": "./",
