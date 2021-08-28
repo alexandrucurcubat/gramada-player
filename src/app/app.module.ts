@@ -12,6 +12,8 @@ import { AccountComponent } from './account/account.component';
 import { PlaylistComponent } from './playlist/playlist.component';
 import { PlaylistActionsComponent } from './playlist/playlist-actions/playlist-actions.component';
 import { RemoveVideoDialogComponent } from './playlist/remove-video-dialog/remove-video-dialog.component';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [
@@ -29,6 +31,12 @@ import { RemoveVideoDialogComponent } from './playlist/remove-video-dialog/remov
     BrowserAnimationsModule,
     YouTubePlayerModule,
     MaterialModule,
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: environment.production,
+      // Register the ServiceWorker as soon as the app is stable
+      // or after 30 seconds (whichever comes first).
+      registrationStrategy: 'registerWhenStable:30000'
+    }),
   ],
   providers: [],
   bootstrap: [AppComponent],
