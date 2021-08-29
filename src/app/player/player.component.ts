@@ -8,7 +8,8 @@ import {
   ViewChild,
 } from '@angular/core';
 import { YouTubePlayer } from '@angular/youtube-player';
-import { YoutubePlayerService } from './youtube-player.service';
+
+import { PlayerService } from './player.service';
 
 let apiLoaded = false;
 const DEFAULT_PLAYER_WIDTH = 640;
@@ -16,17 +17,17 @@ const DEFAULT_PLAYER_HEIGHT = 390;
 
 @Component({
   selector: 'app-youtube-player',
-  templateUrl: './youtube-player.component.html',
-  styleUrls: ['./youtube-player.component.scss'],
+  templateUrl: './player.component.html',
+  styleUrls: ['./player.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class YoutubePlayerComponent implements OnInit, AfterViewInit {
-  @ViewChild('player') player!: YouTubePlayer;
-  @Input() videoId!: string;
+export class PlayerComponent implements OnInit, AfterViewInit {
+  @ViewChild('player') player: YouTubePlayer;
+  @Input() videoId: string;
   innerWidth = DEFAULT_PLAYER_WIDTH;
   innerHeight = DEFAULT_PLAYER_HEIGHT;
 
-  constructor(private youtubePlayerService: YoutubePlayerService) {}
+  constructor(private playerService: PlayerService) {}
 
   ngOnInit() {
     if (!apiLoaded) {
@@ -39,7 +40,7 @@ export class YoutubePlayerComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.youtubePlayerService.initPlayer(this.player);
+    this.playerService.initPlayer(this.player);
   }
 
   @HostListener('window:resize', ['$event'])

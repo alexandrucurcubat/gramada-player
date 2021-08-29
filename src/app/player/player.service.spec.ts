@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { YoutubePlayerService } from './youtube-player.service';
+import { PlayerService } from './player.service';
 
-describe('YoutubePlayerService', () => {
-  let service: YoutubePlayerService;
+describe('PlayerService', () => {
+  let service: PlayerService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(YoutubePlayerService);
+    service = TestBed.inject(PlayerService);
   });
 
   it('should be created', () => {

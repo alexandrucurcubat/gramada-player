@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { YoutubePlayerService } from '../../youtube-player/youtube-player.service';
+import { PlayerService } from '../../player/player.service';
 
 type Video = {
   videoId: string;
@@ -16,8 +16,9 @@ type Video = {
   styleUrls: ['./playlist-actions.component.scss'],
 })
 export class PlaylistActionsComponent implements OnInit {
-  isPlaying$!: Observable<boolean>;
-  isMuted$!: Observable<boolean>;
+  isPlaying$: Observable<boolean>;
+  isMuted$: Observable<boolean>;
+  isReady$: Observable<boolean>;
 
   playlist: Video[] = [
     {
@@ -46,11 +47,12 @@ export class PlaylistActionsComponent implements OnInit {
     },
   ];
 
-  constructor(private playerService: YoutubePlayerService) {}
+  constructor(private playerService: PlayerService) {}
 
   ngOnInit(): void {
     this.isPlaying$ = this.playerService.isPlaying$;
     this.isMuted$ = this.playerService.isMuted$;
+    this.isReady$ = this.playerService.isReady$;
   }
 
   onPlay() {
@@ -67,5 +69,9 @@ export class PlaylistActionsComponent implements OnInit {
 
   onUnMute() {
     this.playerService.unMute();
+  }
+
+  onChange() {
+    this.playerService.change('JQOvsZ4eeOM');
   }
 }

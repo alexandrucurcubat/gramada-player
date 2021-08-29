@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { YoutubePlayerComponent } from './youtube-player.component';
+import { PlaylistDialogComponent } from './playlist-remove-dialog.component';
 
-describe('YoutubePlayerComponent', () => {
-  let component: YoutubePlayerComponent;
-  let fixture: ComponentFixture<YoutubePlayerComponent>;
+describe('PlaylistRemoveDialogComponent', () => {
+  let component: PlaylistDialogComponent;
+  let fixture: ComponentFixture<PlaylistDialogComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ YoutubePlayerComponent ]
+      declarations: [ PlaylistDialogComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(YoutubePlayerComponent);
+    fixture = TestBed.createComponent(PlaylistDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

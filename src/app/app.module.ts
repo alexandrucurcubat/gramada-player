@@ -6,24 +6,24 @@ import { YouTubePlayerModule } from '@angular/youtube-player';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { MaterialModule } from './material/material.module';
-import { YoutubePlayerComponent } from './youtube-player/youtube-player.component';
+import { PlayerComponent } from './player/player.component';
 import { SearchComponent } from './search/search.component';
 import { AccountComponent } from './account/account.component';
 import { PlaylistComponent } from './playlist/playlist.component';
 import { PlaylistActionsComponent } from './playlist/playlist-actions/playlist-actions.component';
-import { RemoveVideoDialogComponent } from './playlist/remove-video-dialog/remove-video-dialog.component';
+import { PlaylistDialogComponent } from './playlist/playlist-remove-dialog/playlist-remove-dialog.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [
     AppComponent,
-    YoutubePlayerComponent,
+    PlayerComponent,
     SearchComponent,
     AccountComponent,
     PlaylistComponent,
     PlaylistActionsComponent,
-    RemoveVideoDialogComponent,
+    PlaylistDialogComponent,
   ],
   imports: [
     BrowserModule,

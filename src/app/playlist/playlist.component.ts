@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 
-import { RemoveVideoDialogComponent } from './remove-video-dialog/remove-video-dialog.component';
+import { PlaylistDialogComponent } from './playlist-remove-dialog/playlist-remove-dialog.component';
 
 type Video = {
   videoId: string;
@@ -17,8 +17,8 @@ type Video = {
   styleUrls: ['./playlist.component.scss'],
 })
 export class PlaylistComponent implements OnInit {
-  isPlaying$!: Observable<boolean>;
-  isMuted$!: Observable<boolean>;
+  isPlaying$: Observable<boolean>;
+  isMuted$: Observable<boolean>;
 
   playlist: Video[] = [
     {
@@ -52,7 +52,7 @@ export class PlaylistComponent implements OnInit {
   ngOnInit(): void {}
 
   onRemove(videoName: string) {
-    const dialogRef = this.dialog.open(RemoveVideoDialogComponent, {
+    const dialogRef = this.dialog.open(PlaylistDialogComponent, {
       data: { videoName },
     });
     dialogRef.afterClosed().subscribe((result: boolean) => {
