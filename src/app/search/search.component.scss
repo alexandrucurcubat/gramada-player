@@ -1,0 +1,53 @@
+.search-container {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  height: 100%;
+}
+
+.search-input {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 1rem;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+mat-selection-list {
+  padding-top: 0;
+}
+
+::ng-deep {
+  .mat-list-text {
+    padding-right: 0 !important;
+  }
+}
+
+mat-selection-list {
+  overflow: auto;
+}
+
+.search-result-item {
+  display: flex;
+  align-items: center;
+}
+
+.search-result {
+  display: flex !important;
+  align-items: center;
+  justify-content: space-between;
+  white-space: nowrap;
+  padding-left: 0.5rem;
+  overflow: hidden;
+  width: 100%;
+  &-content {
+    overflow: hidden;
+  }
+  &-action {
+    display: flex;
+    align-items: flex-end;
+  }
+}

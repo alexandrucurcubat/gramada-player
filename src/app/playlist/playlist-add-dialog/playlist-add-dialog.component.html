@@ -1,0 +1,9 @@
+<mat-dialog-content class="mat-typography">
+  <small>{{ data.title }}</small>
+  <mat-divider></mat-divider>
+  <div>Add this video to the playlist?</div>
+</mat-dialog-content>
+<mat-dialog-actions align="center">
+  <button mat-button color="primary" [mat-dialog-close]="true">Add</button>
+  <button mat-button [mat-dialog-close]="false">Cancel</button>
+</mat-dialog-actions>

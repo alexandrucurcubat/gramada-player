@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { PlayerService } from '../../player/player.service';
+import { PlayerService } from '../player/player.service';
 
 type Video = {
   videoId: string;
@@ -11,11 +11,11 @@ type Video = {
 };
 
 @Component({
-  selector: 'app-playlist-actions',
-  templateUrl: './playlist-actions.component.html',
-  styleUrls: ['./playlist-actions.component.scss'],
+  selector: 'app-player-actions',
+  templateUrl: './player-actions.component.html',
+  styleUrls: ['./player-actions.component.scss'],
 })
-export class PlaylistActionsComponent implements OnInit {
+export class PlayerActionsComponent implements OnInit {
   isPlaying$: Observable<boolean>;
   isMuted$: Observable<boolean>;
   isReady$: Observable<boolean>;

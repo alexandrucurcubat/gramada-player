@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 
-import { PlaylistDialogComponent } from './playlist-remove-dialog/playlist-remove-dialog.component';
+import { PlaylistRemoveDialogComponent } from './playlist-remove-dialog/playlist-remove-dialog.component';
 
 type Video = {
   videoId: string;
@@ -47,12 +47,12 @@ export class PlaylistComponent implements OnInit {
     },
   ];
 
-  constructor(public dialog: MatDialog) {}
+  constructor(private dialog: MatDialog) {}
 
   ngOnInit(): void {}
 
   onRemove(videoName: string) {
-    const dialogRef = this.dialog.open(PlaylistDialogComponent, {
+    const dialogRef = this.dialog.open(PlaylistRemoveDialogComponent, {
       data: { videoName },
     });
     dialogRef.afterClosed().subscribe((result: boolean) => {
