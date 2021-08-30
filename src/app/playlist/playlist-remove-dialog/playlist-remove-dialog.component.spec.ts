@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PlaylistDialogComponent } from './playlist-remove-dialog.component';
+import { PlaylistRemoveDialogComponent } from './playlist-remove-dialog.component';
 
 describe('PlaylistRemoveDialogComponent', () => {
-  let component: PlaylistDialogComponent;
-  let fixture: ComponentFixture<PlaylistDialogComponent>;
+  let component: PlaylistRemoveDialogComponent;
+  let fixture: ComponentFixture<PlaylistRemoveDialogComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ PlaylistDialogComponent ]
+      declarations: [ PlaylistRemoveDialogComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PlaylistDialogComponent);
+    fixture = TestBed.createComponent(PlaylistRemoveDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -16,7 +16,7 @@ const DEFAULT_PLAYER_WIDTH = 640;
 const DEFAULT_PLAYER_HEIGHT = 390;
 
 @Component({
-  selector: 'app-youtube-player',
+  selector: 'app-player',
   templateUrl: './player.component.html',
   styleUrls: ['./player.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

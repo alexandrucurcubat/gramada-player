@@ -1,1 +1,53 @@
-<p>search works!</p>
+<div class="search-container">
+  <div class="search-input">
+    <mat-form-field appearance="standard">
+      <mat-label>Search</mat-label>
+      <input type="search" #search matInput [(ngModel)]="searchString" />
+      <button
+        *ngIf="searchString"
+        matSuffix
+        mat-icon-button
+        (click)="onSearch()"
+      >
+        <mat-icon>search</mat-icon>
+      </button>
+    </mat-form-field>
+    <div *ngIf="videos$ | async as videos">
+      <button
+        *ngIf="videos.length > 0"
+        matSuffix
+        mat-icon-button
+        color="warn"
+        (click)="onClear()"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </div>
+  <mat-divider></mat-divider>
+  <mat-selection-list [multiple]="false" *ngIf="videos$ | async as videos">
+    <mat-list-option *ngFor="let video of videos">
+      <div class="search-result-item">
+        <img [src]="video.thumbnail.url" height="30" width="40" />
+        <div class="search-result">
+          <div class="search-result-content">
+            <div mat-line>
+              <small>{{ video.title }}</small>
+            </div>
+            <div mat-line>{{ video.publishTime }}</div>
+          </div>
+          <div class="search-result-action">
+            <button
+              mat-icon-button
+              color="accent"
+              (click)="onAdd(video.title, video.videoId)"
+            >
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+      <mat-divider></mat-divider>
+    </mat-list-option>
+  </mat-selection-list>
+</div>
