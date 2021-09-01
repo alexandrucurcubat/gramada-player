@@ -5,15 +5,16 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { YouTubePlayerModule } from '@angular/youtube-player';
+import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
+import { provideFirestore, getFirestore } from '@angular/fire/firestore';
 
-import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { MaterialModule } from './material.module';
 import { PlayerComponent } from './player/player.component';
 import { SearchComponent } from './search/search.component';
-import { AccountComponent } from './account/account.component';
+import { SettingsComponent } from './settings/settings.component';
 import { PlaylistComponent } from './playlist/playlist.component';
-import { PlayerActionsComponent } from './player-actions/player-actions.component';
+import { PlayerActionsComponent } from './player/player-actions/player-actions.component';
 import { PlaylistRemoveDialogComponent } from './playlist/playlist-remove-dialog/playlist-remove-dialog.component';
 import { environment } from '../environments/environment';
 import { PlaylistAddDialogComponent } from './playlist/playlist-add-dialog/playlist-add-dialog.component';
@@ -23,7 +24,7 @@ import { PlaylistAddDialogComponent } from './playlist/playlist-add-dialog/playl
     AppComponent,
     PlayerComponent,
     SearchComponent,
-    AccountComponent,
+    SettingsComponent,
     PlaylistComponent,
     PlayerActionsComponent,
     PlaylistRemoveDialogComponent,
@@ -31,7 +32,6 @@ import { PlaylistAddDialogComponent } from './playlist/playlist-add-dialog/playl
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
     BrowserAnimationsModule,
     YouTubePlayerModule,
     MaterialModule,
@@ -41,6 +41,8 @@ import { PlaylistAddDialogComponent } from './playlist/playlist-add-dialog/playl
       // or after 30 seconds (whichever comes first).
       registrationStrategy: 'registerWhenStable:30000',
     }),
+    provideFirebaseApp(() => initializeApp(environment.firebase)),
+    provideFirestore(() => getFirestore()),
     FormsModule,
     HttpClientModule,
   ],

@@ -32,11 +32,12 @@
 >
   <mat-icon>volume_up</mat-icon>
 </button>
+
 <button
   mat-mini-fab
   color="warn"
-  [disabled]="playlist.length === 0 || !(isReady$ | async)"
-  (click)="onChange()"
+  [disabled]="(isPlaylistEmpty$ | async) || !(isReady$ | async)"
+  (click)="onSkip()"
 >
   <mat-icon>skip_next</mat-icon>
 </button>

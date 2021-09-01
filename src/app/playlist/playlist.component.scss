@@ -18,13 +18,28 @@ mat-selection-list {
   overflow: auto;
 }
 
+.playing {
+  color: #009688;
+}
+
 .playlist-item {
-  display: flex !important;
+  display: flex;
   align-items: center;
-  justify-content: space-between;
-  white-space: nowrap;
   &-content {
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
+    white-space: nowrap;
+    padding-left: 0.5rem;
     overflow: hidden;
+    width: 100%;
+  }
+  &-info {
+    overflow: hidden;
+  }
+  &-actions {
+    display: flex;
+    align-items: flex-end;
   }
 }
 

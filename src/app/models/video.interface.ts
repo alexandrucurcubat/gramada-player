@@ -9,4 +9,8 @@ export interface Video {
     height: number;
   };
   title: string;
+  isPlaying?: boolean;
+  boost?: number;
+  boosted?: boolean;
+  addedTimestamp?: any;
 }

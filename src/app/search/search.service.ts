@@ -7,12 +7,12 @@ import { environment } from 'src/environments/environment';
 import { SearchResult } from '../models/search-result.interface';
 import { Video } from '../models/video.interface';
 
-const MAX_RESULTS = 10;
+const MAX_RESULTS = 25;
 
 @Injectable({ providedIn: 'root' })
 export class SearchService {
-  private videosSubject = new BehaviorSubject<Video[]>([]);
-  videos$ = this.videosSubject.asObservable();
+  private searchResultsSubject = new BehaviorSubject<Video[]>([]);
+  searchResults$ = this.searchResultsSubject.asObservable();
 
   constructor(private http: HttpClient) {}
 
@@ -38,10 +38,10 @@ export class SearchService {
           });
         })
       )
-      .subscribe((videos) => this.videosSubject.next(videos));
+      .subscribe((videos) => this.searchResultsSubject.next(videos));
   }
 
   clear() {
-    this.videosSubject.next([]);
+    this.searchResultsSubject.next([]);
   }
 }
