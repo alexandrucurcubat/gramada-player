@@ -1,46 +1,57 @@
 <div class="search-container">
-  <div class="search-input">
-    <mat-form-field appearance="standard">
-      <mat-label>Search</mat-label>
-      <input type="search" #search matInput [(ngModel)]="searchString" />
-      <button
-        *ngIf="searchString"
-        matSuffix
-        mat-icon-button
-        (click)="onSearch()"
-      >
-        <mat-icon>search</mat-icon>
-      </button>
-    </mat-form-field>
-    <div *ngIf="videos$ | async as videos">
-      <button
-        *ngIf="videos.length > 0"
-        matSuffix
-        mat-icon-button
-        color="warn"
-        (click)="onClear()"
-      >
-        <mat-icon>close</mat-icon>
-      </button>
+  <form>
+    <div class="search-input">
+      <mat-form-field appearance="standard">
+        <mat-label>Search</mat-label>
+        <input
+          type="search"
+          [(ngModel)]="searchString"
+          name="searchString"
+          #searchInput
+          matInput
+        />
+        <button
+          *ngIf="searchString"
+          matSuffix
+          mat-icon-button
+          (click)="onSearch()"
+        >
+          <mat-icon>search</mat-icon>
+        </button>
+      </mat-form-field>
+      <div *ngIf="searchResults$ | async as searchResults">
+        <button
+          *ngIf="searchResults.length > 0"
+          matSuffix
+          mat-icon-button
+          color="warn"
+          (click)="onClear()"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
     </div>
-  </div>
+  </form>
   <mat-divider></mat-divider>
-  <mat-selection-list [multiple]="false" *ngIf="videos$ | async as videos">
-    <mat-list-option *ngFor="let video of videos">
+  <mat-selection-list
+    [multiple]="false"
+    *ngIf="searchResults$ | async as searchResults"
+  >
+    <mat-list-option *ngFor="let searchResult of searchResults">
       <div class="search-result-item">
-        <img [src]="video.thumbnail.url" height="30" width="40" />
-        <div class="search-result">
-          <div class="search-result-content">
+        <img [src]="searchResult.thumbnail.url" height="30" width="40" />
+        <div class="search-result-item-content">
+          <div class="search-result-item-info">
             <div mat-line>
-              <small>{{ video.title }}</small>
+              {{ searchResult.title }}
             </div>
-            <div mat-line>{{ video.publishTime }}</div>
+            <div mat-line>{{ searchResult.publishTime | date }}</div>
           </div>
-          <div class="search-result-action">
+          <div class="search-result-item-actions">
             <button
               mat-icon-button
               color="accent"
-              (click)="onAdd(video.title, video.videoId)"
+              (click)="onAdd(searchResult)"
             >
               <mat-icon>add</mat-icon>
             </button>

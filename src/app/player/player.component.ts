@@ -1,15 +1,16 @@
 import {
   AfterViewInit,
-  ChangeDetectionStrategy,
   Component,
   HostListener,
-  Input,
+  OnDestroy,
   OnInit,
   ViewChild,
 } from '@angular/core';
 import { YouTubePlayer } from '@angular/youtube-player';
+import { Observable, Subscription } from 'rxjs';
 
 import { PlayerService } from './player.service';
+import { Video } from '../models/video.interface';
 
 let apiLoaded = false;
 const DEFAULT_PLAYER_WIDTH = 640;
@@ -19,13 +20,15 @@ const DEFAULT_PLAYER_HEIGHT = 390;
   selector: 'app-player',
   templateUrl: './player.component.html',
   styleUrls: ['./player.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PlayerComponent implements OnInit, AfterViewInit {
+export class PlayerComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('player') player: YouTubePlayer;
-  @Input() videoId: string;
   innerWidth = DEFAULT_PLAYER_WIDTH;
   innerHeight = DEFAULT_PLAYER_HEIGHT;
+  isReady$: Observable<boolean>;
+  playingVideo$: Observable<Video | null>;
+  playingVideoSubscription: Subscription;
+  playingVideoId: string;
 
   constructor(private playerService: PlayerService) {}
 
@@ -37,6 +40,11 @@ export class PlayerComponent implements OnInit, AfterViewInit {
       apiLoaded = true;
     }
     this.setPlayerSize();
+    this.isReady$ = this.playerService.isReady$;
+    this.playingVideo$ = this.playerService.playingVideo$;
+    this.playingVideo$.subscribe((video: Video | null) => {
+      if (video) this.playingVideoId = video.videoId;
+    });
   }
 
   ngAfterViewInit(): void {
@@ -56,6 +64,12 @@ export class PlayerComponent implements OnInit, AfterViewInit {
     this.innerHeight = window.innerWidth / 1.66;
     if (this.innerHeight > DEFAULT_PLAYER_HEIGHT) {
       this.innerHeight = DEFAULT_PLAYER_HEIGHT;
+    }
+  }
+
+  ngOnDestroy() {
+    if (this.playingVideoSubscription) {
+      this.playingVideoSubscription.unsubscribe();
     }
   }
 }

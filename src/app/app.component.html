@@ -1,5 +1,5 @@
 <div class="app-container">
-  <app-player [videoId]="videoId"></app-player>
+  <app-player></app-player>
   <app-player-actions></app-player-actions>
   <mat-divider></mat-divider>
   <mat-tab-group
@@ -27,7 +27,7 @@
       <ng-template mat-tab-label>
         <mat-icon class="example-tab-icon">manage_accounts</mat-icon>
       </ng-template>
-      <app-account></app-account>
+      <app-settings></app-settings>
     </mat-tab>
   </mat-tab-group>
 </div>

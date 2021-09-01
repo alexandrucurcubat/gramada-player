@@ -1,24 +1,30 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 
 import { SearchService } from './search.service';
 import { Video } from '../models/video.interface';
 import { PlaylistAddDialogComponent } from '../playlist/playlist-add-dialog/playlist-add-dialog.component';
+import { PlaylistService } from '../playlist/playlist.service';
 
 @Component({
   selector: 'app-search',
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.scss'],
 })
-export class SearchComponent implements OnInit {
+export class SearchComponent implements OnInit, OnDestroy {
   searchString = '';
-  videos$: Observable<Video[]>;
+  searchResults$: Observable<Video[]>;
+  dialogSubscription: Subscription;
 
-  constructor(private seachService: SearchService, private dialog: MatDialog) {}
+  constructor(
+    private seachService: SearchService,
+    private playlistService: PlaylistService,
+    private dialog: MatDialog,
+  ) {}
 
   ngOnInit(): void {
-    this.videos$ = this.seachService.videos$;
+    this.searchResults$ = this.seachService.searchResults$;
   }
 
   onSearch() {
@@ -30,12 +36,22 @@ export class SearchComponent implements OnInit {
     this.seachService.clear();
   }
 
-  onAdd(title: string, videoId: string) {
+  onAdd(video: Video) {
     const dialogRef = this.dialog.open(PlaylistAddDialogComponent, {
-      data: { title },
+      data: { title: video.title },
     });
-    dialogRef.afterClosed().subscribe((result: boolean) => {
-      console.log('add video', result);
-    });
+    this.dialogSubscription = dialogRef
+      .afterClosed()
+      .subscribe((canAdd: boolean) => {
+        if (canAdd) {
+          this.playlistService.add(video);
+        }
+      });
+  }
+
+  ngOnDestroy() {
+    if (this.dialogSubscription) {
+      this.dialogSubscription.unsubscribe();
+    }
   }
 }

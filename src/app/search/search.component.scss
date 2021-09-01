@@ -33,20 +33,19 @@ mat-selection-list {
 .search-result-item {
   display: flex;
   align-items: center;
-}
-
-.search-result {
-  display: flex !important;
-  align-items: center;
-  justify-content: space-between;
-  white-space: nowrap;
-  padding-left: 0.5rem;
-  overflow: hidden;
-  width: 100%;
   &-content {
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
+    white-space: nowrap;
+    padding-left: 0.5rem;
+    overflow: hidden;
+    width: 100%;
+  }
+  &-info {
     overflow: hidden;
   }
-  &-action {
+  &-actions {
     display: flex;
     align-items: flex-end;
   }
