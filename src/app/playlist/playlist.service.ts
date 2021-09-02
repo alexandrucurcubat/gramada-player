@@ -38,7 +38,7 @@ export class PlaylistService implements OnDestroy {
   constructor(
     private db: Firestore,
     private snackBar: MatSnackBar,
-    private userService: UserService
+    private userService: UserService,
   ) {
     const playlistRef = query(
       collection(this.db, 'playlist'),
@@ -77,6 +77,12 @@ export class PlaylistService implements OnDestroy {
             batch.delete(doc(this.db, 'playlist', this.playingVideo.videoId));
             batch.commit();
             this.playingVideoSubject.next(this.playingVideo);
+            if (
+              this.currentUser &&
+              this.playingVideo.boostedBy?.includes(this.currentUser.username)
+            ) {
+              await this.userService.updateCanBoost(this.currentUser);
+            }
           } else if (playingSnapshot.empty && this.playlist.length === 0) {
             this.playingVideoSubject.next(null);
           } else if (!playingSnapshot.empty) {
@@ -88,7 +94,10 @@ export class PlaylistService implements OnDestroy {
         }
       );
     } catch (error) {
-      this.snackBar.open(error.message, '', { duration: 2000 });
+      this.snackBar.open(error.message, 'OK', {
+        duration: 5000,
+        verticalPosition: 'top',
+      });
       console.error(error);
     }
   }
@@ -103,9 +112,15 @@ export class PlaylistService implements OnDestroy {
         boostedBy: [],
         addedTimestamp: serverTimestamp(),
       });
-      this.snackBar.open('Video added to playlist', '', { duration: 2000 });
+      this.snackBar.open('Video added to playlist', 'OK', {
+        duration: 5000,
+        verticalPosition: 'top',
+      });
     } catch (error) {
-      this.snackBar.open(error.message, '', { duration: 2000 });
+      this.snackBar.open(error.message, 'OK', {
+        duration: 5000,
+        verticalPosition: 'top',
+      });
       console.error(error);
     }
   }
@@ -123,9 +138,18 @@ export class PlaylistService implements OnDestroy {
         });
         batch.delete(doc(this.db, 'playing', this.playingVideo.videoId));
         await batch.commit();
+        if (
+          this.currentUser &&
+          this.playingVideo.boostedBy?.includes(this.currentUser.username)
+        ) {
+          await this.userService.updateCanBoost(this.currentUser);
+        }
       }
     } catch (error) {
-      this.snackBar.open(error.message, '', { duration: 2000 });
+      this.snackBar.open(error.message, 'OK', {
+        duration: 5000,
+        verticalPosition: 'top',
+      });
       console.error(error);
     }
   }
@@ -134,11 +158,15 @@ export class PlaylistService implements OnDestroy {
     try {
       const docRef = doc(this.db, 'playlist', video.videoId);
       await deleteDoc(docRef);
-      this.snackBar.open('Video removed from playlist', '', {
-        duration: 2000,
+      this.snackBar.open('Video removed from playlist', 'OK', {
+        duration: 5000,
+        verticalPosition: 'top',
       });
     } catch (error) {
-      this.snackBar.open(error.message, '', { duration: 2000 });
+      this.snackBar.open(error.message, 'OK', {
+        duration: 5000,
+        verticalPosition: 'top',
+      });
       console.error(error);
     }
   }
@@ -150,7 +178,10 @@ export class PlaylistService implements OnDestroy {
         addedTimestamp: serverTimestamp(),
       });
     } catch (error) {
-      this.snackBar.open(error.message, '', { duration: 2000 });
+      this.snackBar.open(error.message, 'OK', {
+        duration: 5000,
+        verticalPosition: 'top',
+      });
       console.error(error);
     }
   }
@@ -162,7 +193,10 @@ export class PlaylistService implements OnDestroy {
         boost: 0,
       });
     } catch (error) {
-      this.snackBar.open(error.message, '', { duration: 2000 });
+      this.snackBar.open(error.message, 'OK', {
+        duration: 5000,
+        verticalPosition: 'top',
+      });
       console.error(error);
     }
   }
@@ -182,8 +216,11 @@ export class PlaylistService implements OnDestroy {
             (username) => username !== this.currentUser?.username
           ),
         });
-        await this.userService.userBoosted(this.currentUser);
-        this.snackBar.open('Boost canceled', '', { duration: 2000 });
+        await this.userService.updateCanBoost(this.currentUser);
+        this.snackBar.open('Boost canceled', 'OK', {
+          duration: 5000,
+          verticalPosition: 'top',
+        });
       } else if (
         this.currentUser &&
         video.boost !== undefined &&
@@ -195,13 +232,22 @@ export class PlaylistService implements OnDestroy {
           boost: video.boost + 1,
           boostedBy: [...video.boostedBy, this.currentUser.username],
         });
-        await this.userService.userBoosted(this.currentUser);
-        this.snackBar.open('Video boosted', '', { duration: 2000 });
+        await this.userService.updateCanBoost(this.currentUser);
+        this.snackBar.open('Video boosted', 'OK', {
+          duration: 5000,
+          verticalPosition: 'top',
+        });
       } else {
-        this.snackBar.open('Already boosted', '', { duration: 2000 });
+        this.snackBar.open('Boost already used', 'OK', {
+          duration: 5000,
+          verticalPosition: 'top',
+        });
       }
     } catch (error) {
-      this.snackBar.open(error.message, '', { duration: 2000 });
+      this.snackBar.open(error.message, 'OK', {
+        duration: 5000,
+        verticalPosition: 'top',
+      });
       console.error(error);
     }
   }
