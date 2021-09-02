@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -18,6 +18,7 @@ import { PlayerActionsComponent } from './player/player-actions/player-actions.c
 import { PlaylistRemoveDialogComponent } from './playlist/playlist-remove-dialog/playlist-remove-dialog.component';
 import { environment } from '../environments/environment';
 import { PlaylistAddDialogComponent } from './playlist/playlist-add-dialog/playlist-add-dialog.component';
+import { NewUserDialogComponent } from './user/new-user-dialog/new-user-dialog.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { PlaylistAddDialogComponent } from './playlist/playlist-add-dialog/playl
     PlayerActionsComponent,
     PlaylistRemoveDialogComponent,
     PlaylistAddDialogComponent,
+    NewUserDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -44,6 +46,7 @@ import { PlaylistAddDialogComponent } from './playlist/playlist-add-dialog/playl
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideFirestore(() => getFirestore()),
     FormsModule,
+    ReactiveFormsModule,
     HttpClientModule,
   ],
   providers: [],

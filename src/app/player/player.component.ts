@@ -26,25 +26,25 @@ export class PlayerComponent implements OnInit, AfterViewInit, OnDestroy {
   innerWidth = DEFAULT_PLAYER_WIDTH;
   innerHeight = DEFAULT_PLAYER_HEIGHT;
   isReady$: Observable<boolean>;
-  playingVideo$: Observable<Video | null>;
-  playingVideoSubscription: Subscription;
   playingVideoId: string;
+  private subscription = new Subscription();
 
   constructor(private playerService: PlayerService) {}
 
   ngOnInit() {
+    this.setPlayerSize();
     if (!apiLoaded) {
       const tag = document.createElement('script');
       tag.src = 'https://www.youtube.com/iframe_api';
       document.body.appendChild(tag);
       apiLoaded = true;
     }
-    this.setPlayerSize();
     this.isReady$ = this.playerService.isReady$;
-    this.playingVideo$ = this.playerService.playingVideo$;
-    this.playingVideo$.subscribe((video: Video | null) => {
-      if (video) this.playingVideoId = video.videoId;
-    });
+    this.subscription.add(
+      this.playerService.playingVideo$.subscribe((video: Video | null) => {
+        if (video) this.playingVideoId = video.videoId;
+      })
+    );
   }
 
   ngAfterViewInit(): void {
@@ -56,7 +56,7 @@ export class PlayerComponent implements OnInit, AfterViewInit, OnDestroy {
     this.setPlayerSize();
   }
 
-  setPlayerSize() {
+  private setPlayerSize() {
     this.innerWidth = window.innerWidth;
     if (window.innerWidth > DEFAULT_PLAYER_WIDTH) {
       this.innerWidth = DEFAULT_PLAYER_WIDTH;
@@ -68,8 +68,6 @@ export class PlayerComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if (this.playingVideoSubscription) {
-      this.playingVideoSubscription.unsubscribe();
-    }
+    this.subscription.unsubscribe();
   }
 }

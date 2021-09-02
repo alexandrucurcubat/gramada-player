@@ -1,5 +1,32 @@
-<div class="settings">
-  <mat-slide-toggle [(ngModel)]="autoPlay" (toggleChange)="onToggleAutoPlay()">
+<div
+  class="settings-username"
+  *ngIf="currentUsername$ | async as currentUsername"
+>
+  <form [formGroup]="usernameForm" (ngSubmit)="onUpdateUsername()">
+    <mat-form-field appearance="standard">
+      <mat-label>Username</mat-label>
+      <input
+        type="text"
+        matInput
+        formControlName="username"
+        [value]="currentUsername"
+      />
+      <mat-error *ngIf="username?.errors?.required">
+        Username is required
+      </mat-error>
+    </mat-form-field>
+    <button mat-button color="primary">Update username</button>
+  </form>
+</div>
+<mat-divider></mat-divider>
+
+<div class="settings-autoplay">
+  <mat-slide-toggle
+    [(ngModel)]="autoplay"
+    (toggleChange)="onToggleAutoplay()"
+    color="primary"
+  >
     Autoplay
   </mat-slide-toggle>
 </div>
+<mat-divider></mat-divider>

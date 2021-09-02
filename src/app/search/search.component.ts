@@ -15,12 +15,12 @@ import { PlaylistService } from '../playlist/playlist.service';
 export class SearchComponent implements OnInit, OnDestroy {
   searchString = '';
   searchResults$: Observable<Video[]>;
-  dialogSubscription: Subscription;
+  private subscription = new Subscription();
 
   constructor(
     private seachService: SearchService,
     private playlistService: PlaylistService,
-    private dialog: MatDialog,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -40,18 +40,16 @@ export class SearchComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(PlaylistAddDialogComponent, {
       data: { title: video.title },
     });
-    this.dialogSubscription = dialogRef
-      .afterClosed()
-      .subscribe((canAdd: boolean) => {
+    this.subscription.add(
+      dialogRef.afterClosed().subscribe((canAdd: boolean) => {
         if (canAdd) {
           this.playlistService.add(video);
         }
-      });
+      })
+    );
   }
 
   ngOnDestroy() {
-    if (this.dialogSubscription) {
-      this.dialogSubscription.unsubscribe();
-    }
+    this.subscription.unsubscribe();
   }
 }

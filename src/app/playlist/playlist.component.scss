@@ -20,6 +20,9 @@ mat-selection-list {
 
 .playing {
   color: #009688;
+  mat-icon {
+    margin-right: 0.5rem;
+  }
 }
 
 .playlist-item {
