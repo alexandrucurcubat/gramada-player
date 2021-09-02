@@ -1,5 +1,4 @@
-import { Injectable } from '@angular/core';
-
+import { Injectable, OnDestroy } from '@angular/core';
 import {
   Firestore,
   collection,
@@ -10,32 +9,88 @@ import {
   deleteDoc,
   setDoc,
   updateDoc,
+  limit,
+  writeBatch,
 } from '@angular/fire/firestore';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { orderBy } from '@firebase/firestore';
-import { BehaviorSubject } from 'rxjs';
+import { Unsubscribe } from 'firebase/firestore';
+import { BehaviorSubject, Subscription } from 'rxjs';
 
+import { User } from '../models/user.interface';
 import { Video } from '../models/video.interface';
+import { UserService } from '../user/user.service';
 
 @Injectable({ providedIn: 'root' })
-export class PlaylistService {
+export class PlaylistService implements OnDestroy {
   private playlistSubject = new BehaviorSubject<Video[]>([]);
-  playlist$ = this.playlistSubject.asObservable();
+  private playingVideoSubject = new BehaviorSubject<Video | null>(null);
+  readonly playlist$ = this.playlistSubject.asObservable();
+  readonly playingVideo$ = this.playingVideoSubject.asObservable();
+  private playlist: Video[] = [];
+  private playingVideo: Video | null;
+  private subscription = new Subscription();
+  private playlistUnsubscribe: Unsubscribe;
+  private playingUnsubscribe: Unsubscribe;
 
-  constructor(private db: Firestore, private _snackBar: MatSnackBar) {
-    const playlistQuery = query(
-      collection(db, 'playlist'),
+  currentUser: User | null;
+
+  constructor(
+    private db: Firestore,
+    private snackBar: MatSnackBar,
+    private userService: UserService
+  ) {
+    const playlistRef = query(
+      collection(this.db, 'playlist'),
       orderBy('isPlaying', 'desc'),
       orderBy('boost', 'desc'),
       orderBy('addedTimestamp')
     );
-    onSnapshot(playlistQuery, (querySnapshot) => {
+    this.playlistUnsubscribe = onSnapshot(playlistRef, (playlistSnapshot) => {
       const playlist: Video[] = [];
-      querySnapshot.forEach((doc) => {
+      playlistSnapshot.forEach((doc) => {
         playlist.push(doc.data() as Video);
       });
       this.playlistSubject.next(playlist);
+      this.playlist = playlist;
     });
+    this.subscription.add(
+      userService.currentUser$.subscribe((user) => {
+        this.currentUser = user;
+      })
+    );
+  }
+
+  async initPlaylist() {
+    try {
+      const playingRef = query(collection(this.db, 'playing'), limit(1));
+      this.playingUnsubscribe = onSnapshot(
+        playingRef,
+        async (playingSnapshot) => {
+          if (playingSnapshot.empty && this.playlist.length > 0) {
+            this.playingVideo = this.playlist[0];
+            const batch = writeBatch(this.db);
+            batch.set(
+              doc(this.db, 'playing', this.playingVideo.videoId),
+              this.playingVideo
+            );
+            batch.delete(doc(this.db, 'playlist', this.playingVideo.videoId));
+            batch.commit();
+            this.playingVideoSubject.next(this.playingVideo);
+          } else if (playingSnapshot.empty && this.playlist.length === 0) {
+            this.playingVideoSubject.next(null);
+          } else if (!playingSnapshot.empty) {
+            playingSnapshot.forEach((doc) => {
+              this.playingVideo = doc.data() as Video;
+              this.playingVideoSubject.next(this.playingVideo);
+            });
+          }
+        }
+      );
+    } catch (error) {
+      this.snackBar.open(error.message, '', { duration: 2000 });
+      console.error(error);
+    }
   }
 
   async add(video: Video) {
@@ -45,11 +100,32 @@ export class PlaylistService {
         ...video,
         isPlaying: false,
         boost: 0,
+        boostedBy: [],
         addedTimestamp: serverTimestamp(),
       });
-      this._snackBar.open('Video added to playlist', 'Ok', { duration: 2000 });
+      this.snackBar.open('Video added to playlist', '', { duration: 2000 });
     } catch (error) {
-      this._snackBar.open('Something went wrong...', 'Ok', { duration: 2000 });
+      this.snackBar.open(error.message, '', { duration: 2000 });
+      console.error(error);
+    }
+  }
+
+  async skip() {
+    try {
+      if (this.playingVideo) {
+        const batch = writeBatch(this.db);
+        batch.set(doc(this.db, 'playlist', this.playingVideo.videoId), {
+          ...this.playingVideo,
+          isPlaying: false,
+          boost: 0,
+          boostedBy: [],
+          addedTimestamp: serverTimestamp(),
+        });
+        batch.delete(doc(this.db, 'playing', this.playingVideo.videoId));
+        await batch.commit();
+      }
+    } catch (error) {
+      this.snackBar.open(error.message, '', { duration: 2000 });
       console.error(error);
     }
   }
@@ -58,21 +134,11 @@ export class PlaylistService {
     try {
       const docRef = doc(this.db, 'playlist', video.videoId);
       await deleteDoc(docRef);
-      this._snackBar.open('Video removed from playlist', 'Ok', {
+      this.snackBar.open('Video removed from playlist', '', {
         duration: 2000,
       });
     } catch (error) {
-      this._snackBar.open('Something went wrong...', 'Ok', { duration: 2000 });
-      console.error(error);
-    }
-  }
-
-  async setIsPlaying(isPlaying: boolean, video: Video) {
-    try {
-      const docRef = doc(this.db, 'playlist', video.videoId);
-      await updateDoc(docRef, { isPlaying });
-    } catch (error) {
-      this._snackBar.open('Something went wrong...', 'Ok', { duration: 2000 });
+      this.snackBar.open(error.message, '', { duration: 2000 });
       console.error(error);
     }
   }
@@ -84,7 +150,7 @@ export class PlaylistService {
         addedTimestamp: serverTimestamp(),
       });
     } catch (error) {
-      this._snackBar.open('Something went wrong...', 'Ok', { duration: 2000 });
+      this.snackBar.open(error.message, '', { duration: 2000 });
       console.error(error);
     }
   }
@@ -96,8 +162,53 @@ export class PlaylistService {
         boost: 0,
       });
     } catch (error) {
-      this._snackBar.open('Something went wrong...', 'Ok', { duration: 2000 });
+      this.snackBar.open(error.message, '', { duration: 2000 });
       console.error(error);
     }
+  }
+
+  async boost(video: Video) {
+    try {
+      const docRef = doc(this.db, 'playlist', video.videoId);
+      if (
+        this.currentUser &&
+        video.boost !== undefined &&
+        video.boostedBy !== undefined &&
+        video.boostedBy.includes(this.currentUser.username)
+      ) {
+        await updateDoc(docRef, {
+          boost: video.boost - 1,
+          boostedBy: video.boostedBy.filter(
+            (username) => username !== this.currentUser?.username
+          ),
+        });
+        await this.userService.userBoosted(this.currentUser);
+        this.snackBar.open('Boost canceled', '', { duration: 2000 });
+      } else if (
+        this.currentUser &&
+        video.boost !== undefined &&
+        video.boostedBy !== undefined &&
+        !video.boostedBy.includes(this.currentUser.username) &&
+        this.currentUser.canBoost
+      ) {
+        await updateDoc(docRef, {
+          boost: video.boost + 1,
+          boostedBy: [...video.boostedBy, this.currentUser.username],
+        });
+        await this.userService.userBoosted(this.currentUser);
+        this.snackBar.open('Video boosted', '', { duration: 2000 });
+      } else {
+        this.snackBar.open('Already boosted', '', { duration: 2000 });
+      }
+    } catch (error) {
+      this.snackBar.open(error.message, '', { duration: 2000 });
+      console.error(error);
+    }
+  }
+
+  ngOnDestroy() {
+    this.playlistUnsubscribe();
+    this.playingUnsubscribe();
+    this.subscription.unsubscribe();
   }
 }

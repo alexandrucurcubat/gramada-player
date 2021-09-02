@@ -3,14 +3,28 @@
     [multiple]="false"
     *ngIf="playlist.length > 0; else emptyPlaylist"
   >
+    <mat-list-option *ngIf="playingVideo$ | async as playingVideo">
+      <div class="playlist-item">
+        <img [src]="playingVideo.thumbnail.url" height="30" width="40" />
+        <div class="playlist-item-content playing">
+          <div class="playlist-item-info">
+            <div mat-line>
+              {{ playingVideo.title }}
+            </div>
+            <small mat-line>Playing</small>
+          </div>
+          <div class="playlist-item-actions">
+            <mat-icon>music_note</mat-icon>
+          </div>
+        </div>
+      </div>
+      <mat-divider></mat-divider>
+    </mat-list-option>
     <mat-list-option *ngFor="let video of playlist">
       <div class="playlist-item">
         <img [src]="video.thumbnail.url" height="30" width="40" />
         <div class="playlist-item-content">
-          <div
-            class="playlist-item-info"
-            [class.playing]="video === playlist[0]"
-          >
+          <div class="playlist-item-info">
             <div mat-line>
               {{ video.title }}
             </div>
@@ -24,10 +38,16 @@
               <small mat-line>No boost</small>
             </ng-template>
           </div>
-          <div class="playlist-item-actions">
+          <div
+            class="playlist-item-actions"
+            *ngIf="currentUsername$ | async as username"
+          >
             <button
               mat-icon-button
-              [color]="video.boosted ? 'accent' : 'defualt'"
+              [color]="
+                video.boostedBy?.includes(username) ? 'accent' : 'defualt'
+              "
+              (click)="onBoost(video)"
             >
               <mat-icon>keyboard_double_arrow_up</mat-icon>
             </button>

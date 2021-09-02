@@ -11,6 +11,6 @@ export interface Video {
   title: string;
   isPlaying?: boolean;
   boost?: number;
-  boosted?: boolean;
+  boostedBy?: string[];
   addedTimestamp?: any;
 }

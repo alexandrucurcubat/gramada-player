@@ -1,0 +1,15 @@
+<form [formGroup]="registerForm" (ngSubmit)="onRegister()">
+  <div mat-dialog-content>
+    <p>Please insert your username</p>
+    <mat-form-field appearance="standard">
+      <mat-label>Username</mat-label>
+      <input type="text" matInput formControlName="username" />
+      <mat-error *ngIf="username?.errors?.required">
+        Username is required
+      </mat-error>
+    </mat-form-field>
+  </div>
+  <mat-dialog-actions align="center">
+    <button mat-flat-button color="primary">Register</button>
+  </mat-dialog-actions>
+</form>
