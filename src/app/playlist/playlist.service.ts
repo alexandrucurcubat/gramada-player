@@ -38,7 +38,7 @@ export class PlaylistService implements OnDestroy {
   constructor(
     private db: Firestore,
     private snackBar: MatSnackBar,
-    private userService: UserService,
+    private userService: UserService
   ) {
     const playlistRef = query(
       collection(this.db, 'playlist'),
@@ -81,7 +81,7 @@ export class PlaylistService implements OnDestroy {
               this.currentUser &&
               this.playingVideo.boostedBy?.includes(this.currentUser.username)
             ) {
-              await this.userService.updateCanBoost(this.currentUser);
+              await this.userService.enableCanBoost(this.currentUser);
             }
           } else if (playingSnapshot.empty && this.playlist.length === 0) {
             this.playingVideoSubject.next(null);
@@ -112,6 +112,9 @@ export class PlaylistService implements OnDestroy {
         boostedBy: [],
         addedTimestamp: serverTimestamp(),
       });
+      if (this.currentUser) {
+        await this.userService.enableCanBoost(this.currentUser);
+      }
       this.snackBar.open('Video added to playlist', 'OK', {
         duration: 5000,
         verticalPosition: 'top',
@@ -142,7 +145,7 @@ export class PlaylistService implements OnDestroy {
           this.currentUser &&
           this.playingVideo.boostedBy?.includes(this.currentUser.username)
         ) {
-          await this.userService.updateCanBoost(this.currentUser);
+          await this.userService.enableCanBoost(this.currentUser);
         }
       }
     } catch (error) {
@@ -158,6 +161,12 @@ export class PlaylistService implements OnDestroy {
     try {
       const docRef = doc(this.db, 'playlist', video.videoId);
       await deleteDoc(docRef);
+      if (
+        this.currentUser &&
+        video.boostedBy?.includes(this.currentUser.username)
+      ) {
+        await this.userService.enableCanBoost(this.currentUser);
+      }
       this.snackBar.open('Video removed from playlist', 'OK', {
         duration: 5000,
         verticalPosition: 'top',
@@ -216,7 +225,7 @@ export class PlaylistService implements OnDestroy {
             (username) => username !== this.currentUser?.username
           ),
         });
-        await this.userService.updateCanBoost(this.currentUser);
+        await this.userService.enableCanBoost(this.currentUser);
         this.snackBar.open('Boost canceled', 'OK', {
           duration: 5000,
           verticalPosition: 'top',
@@ -232,7 +241,7 @@ export class PlaylistService implements OnDestroy {
           boost: video.boost + 1,
           boostedBy: [...video.boostedBy, this.currentUser.username],
         });
-        await this.userService.updateCanBoost(this.currentUser);
+        await this.userService.disableCanBoost(this.currentUser);
         this.snackBar.open('Video boosted', 'OK', {
           duration: 5000,
           verticalPosition: 'top',

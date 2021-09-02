@@ -40,18 +40,23 @@
           </div>
           <div
             class="playlist-item-actions"
-            *ngIf="currentUsername$ | async as username"
+            *ngIf="currentUser$ | async as user"
           >
             <button
               mat-icon-button
               [color]="
-                video.boostedBy?.includes(username) ? 'accent' : 'defualt'
+                video.boostedBy?.includes(user.username) ? 'accent' : 'defualt'
               "
               (click)="onBoost(video)"
             >
               <mat-icon>keyboard_double_arrow_up</mat-icon>
             </button>
-            <button mat-icon-button color="warn" (click)="onRemove(video)">
+            <button
+              *ngIf="user.admin"
+              mat-icon-button
+              color="warn"
+              (click)="onRemove(video)"
+            >
               <mat-icon>remove_circle_outline</mat-icon>
             </button>
           </div>

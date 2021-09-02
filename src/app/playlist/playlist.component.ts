@@ -6,6 +6,7 @@ import { PlaylistRemoveDialogComponent } from './playlist-remove-dialog/playlist
 import { PlaylistService } from './playlist.service';
 import { Video } from '../models/video.interface';
 import { UserService } from '../user/user.service';
+import { User } from '../models/user.interface';
 
 @Component({
   selector: 'app-playlist',
@@ -17,7 +18,7 @@ export class PlaylistComponent implements OnInit, OnDestroy {
   isMuted$: Observable<boolean>;
   playlist$: Observable<Video[]>;
   playingVideo$: Observable<Video | null>;
-  currentUsername$: Observable<string | null>;
+  currentUser$: Observable<User | null>;
   private subscription = new Subscription();
 
   constructor(
@@ -29,7 +30,7 @@ export class PlaylistComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.playlist$ = this.playlistService.playlist$;
     this.playingVideo$ = this.playlistService.playingVideo$;
-    this.currentUsername$ = this.userService.currentUsername$;
+    this.currentUser$ = this.userService.currentUser$;
   }
 
   onRemove(video: Video) {

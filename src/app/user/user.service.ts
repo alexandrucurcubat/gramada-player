@@ -50,6 +50,7 @@ export class UserService implements OnDestroy {
         username,
         canBoost: true,
         addedTimestamp: serverTimestamp(),
+        admin: username === 'admin',
       });
       localStorage.setItem('username', username);
       this.currentUsernameSubject.next(username);
@@ -80,11 +81,25 @@ export class UserService implements OnDestroy {
     }
   }
 
-  async updateCanBoost(user: User) {
+  async enableCanBoost(user: User) {
     try {
       const docRef = doc(this.db, 'users', user.username);
-      await updateDoc(docRef, { canBoost: !user.canBoost });
-      this.currentUserSubject.next({ ...user, canBoost: !user.canBoost });
+      await updateDoc(docRef, { canBoost: true });
+      this.currentUserSubject.next({ ...user, canBoost: true });
+    } catch (error) {
+      this.snackBar.open(error.message, 'OK', {
+        duration: 5000,
+        verticalPosition: 'top',
+      });
+      console.error(error);
+    }
+  }
+
+  async disableCanBoost(user: User) {
+    try {
+      const docRef = doc(this.db, 'users', user.username);
+      await updateDoc(docRef, { canBoost: false });
+      this.currentUserSubject.next({ ...user, canBoost: false });
     } catch (error) {
       this.snackBar.open(error.message, 'OK', {
         duration: 5000,
