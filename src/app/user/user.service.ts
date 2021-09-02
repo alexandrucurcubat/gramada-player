@@ -53,9 +53,15 @@ export class UserService implements OnDestroy {
       });
       localStorage.setItem('username', username);
       this.currentUsernameSubject.next(username);
-      this.snackBar.open('Username saved', '', { duration: 2000 });
+      this.snackBar.open('Username saved', 'OK', {
+        duration: 5000,
+        verticalPosition: 'top',
+      });
     } catch (error) {
-      this.snackBar.open(error.message, '', { duration: 2000 });
+      this.snackBar.open(error.message, 'OK', {
+        duration: 5000,
+        verticalPosition: 'top',
+      });
       console.error(error);
     }
   }
@@ -66,18 +72,24 @@ export class UserService implements OnDestroy {
       await deleteDoc(docRef);
       await this.register(newUsername);
     } catch (error) {
-      this.snackBar.open(error.message, '', { duration: 2000 });
+      this.snackBar.open(error.message, 'OK', {
+        duration: 5000,
+        verticalPosition: 'top',
+      });
       console.error(error);
     }
   }
 
-  async userBoosted(user: User) {
+  async updateCanBoost(user: User) {
     try {
       const docRef = doc(this.db, 'users', user.username);
       await updateDoc(docRef, { canBoost: !user.canBoost });
       this.currentUserSubject.next({ ...user, canBoost: !user.canBoost });
     } catch (error) {
-      this.snackBar.open(error.message, '', { duration: 2000 });
+      this.snackBar.open(error.message, 'OK', {
+        duration: 5000,
+        verticalPosition: 'top',
+      });
       console.error(error);
     }
   }
