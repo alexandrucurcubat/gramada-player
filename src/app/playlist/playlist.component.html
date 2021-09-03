@@ -11,10 +11,12 @@
             <div mat-line>
               {{ playingVideo.title }}
             </div>
-            <small mat-line>Playing</small>
+            <small mat-line *ngIf="isPlaying$ | async">Playing</small>
+            <small mat-line *ngIf="!(isPlaying$ | async)">Paused</small>
           </div>
           <div class="playlist-item-actions">
-            <mat-icon>music_note</mat-icon>
+            <mat-icon *ngIf="isPlaying$ | async">play_arrow</mat-icon>
+            <mat-icon *ngIf="!(isPlaying$ | async)">pause</mat-icon>
           </div>
         </div>
       </div>

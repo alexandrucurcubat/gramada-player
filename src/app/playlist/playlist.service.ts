@@ -93,7 +93,7 @@ export class PlaylistService implements OnDestroy {
           }
         }
       );
-    } catch (error) {
+    } catch (error: any) {
       this.snackBar.open(error.message, 'OK', {
         duration: 5000,
         verticalPosition: 'top',
@@ -119,7 +119,7 @@ export class PlaylistService implements OnDestroy {
         duration: 5000,
         verticalPosition: 'top',
       });
-    } catch (error) {
+    } catch (error: any) {
       this.snackBar.open(error.message, 'OK', {
         duration: 5000,
         verticalPosition: 'top',
@@ -148,7 +148,7 @@ export class PlaylistService implements OnDestroy {
           await this.userService.enableCanBoost(this.currentUser);
         }
       }
-    } catch (error) {
+    } catch (error: any) {
       this.snackBar.open(error.message, 'OK', {
         duration: 5000,
         verticalPosition: 'top',
@@ -171,7 +171,7 @@ export class PlaylistService implements OnDestroy {
         duration: 5000,
         verticalPosition: 'top',
       });
-    } catch (error) {
+    } catch (error: any) {
       this.snackBar.open(error.message, 'OK', {
         duration: 5000,
         verticalPosition: 'top',
@@ -186,7 +186,7 @@ export class PlaylistService implements OnDestroy {
       await updateDoc(docRef, {
         addedTimestamp: serverTimestamp(),
       });
-    } catch (error) {
+    } catch (error: any) {
       this.snackBar.open(error.message, 'OK', {
         duration: 5000,
         verticalPosition: 'top',
@@ -201,7 +201,7 @@ export class PlaylistService implements OnDestroy {
       await updateDoc(docRef, {
         boost: 0,
       });
-    } catch (error) {
+    } catch (error: any) {
       this.snackBar.open(error.message, 'OK', {
         duration: 5000,
         verticalPosition: 'top',
@@ -252,7 +252,7 @@ export class PlaylistService implements OnDestroy {
           verticalPosition: 'top',
         });
       }
-    } catch (error) {
+    } catch (error: any) {
       this.snackBar.open(error.message, 'OK', {
         duration: 5000,
         verticalPosition: 'top',

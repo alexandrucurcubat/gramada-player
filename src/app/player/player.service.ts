@@ -1,7 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { YouTubePlayer } from '@angular/youtube-player';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
-import { map } from 'rxjs/operators';
 
 import { Video } from '../models/video.interface';
 import { PlaylistService } from '../playlist/playlist.service';
@@ -73,8 +72,11 @@ export class PlayerService implements OnDestroy {
     this.player.stopVideo();
   }
 
-  skip() {
-    this.playlistService.skip();
+  async skip() {
+    await this.playlistService.skip();
+    if (!this.isAutoplay()) {
+      this.pause();
+    }
   }
 
   mute() {

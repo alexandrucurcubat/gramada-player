@@ -58,7 +58,7 @@ export class UserService implements OnDestroy {
         duration: 5000,
         verticalPosition: 'top',
       });
-    } catch (error) {
+    } catch (error: any) {
       this.snackBar.open(error.message, 'OK', {
         duration: 5000,
         verticalPosition: 'top',
@@ -72,7 +72,7 @@ export class UserService implements OnDestroy {
       const docRef = doc(this.db, 'users', oldUsername);
       await deleteDoc(docRef);
       await this.register(newUsername);
-    } catch (error) {
+    } catch (error: any) {
       this.snackBar.open(error.message, 'OK', {
         duration: 5000,
         verticalPosition: 'top',
@@ -86,7 +86,7 @@ export class UserService implements OnDestroy {
       const docRef = doc(this.db, 'users', user.username);
       await updateDoc(docRef, { canBoost: true });
       this.currentUserSubject.next({ ...user, canBoost: true });
-    } catch (error) {
+    } catch (error: any) {
       this.snackBar.open(error.message, 'OK', {
         duration: 5000,
         verticalPosition: 'top',
@@ -100,7 +100,7 @@ export class UserService implements OnDestroy {
       const docRef = doc(this.db, 'users', user.username);
       await updateDoc(docRef, { canBoost: false });
       this.currentUserSubject.next({ ...user, canBoost: false });
-    } catch (error) {
+    } catch (error: any) {
       this.snackBar.open(error.message, 'OK', {
         duration: 5000,
         verticalPosition: 'top',

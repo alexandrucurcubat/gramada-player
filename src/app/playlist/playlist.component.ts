@@ -7,6 +7,7 @@ import { PlaylistService } from './playlist.service';
 import { Video } from '../models/video.interface';
 import { UserService } from '../user/user.service';
 import { User } from '../models/user.interface';
+import { PlayerService } from '../player/player.service';
 
 @Component({
   selector: 'app-playlist',
@@ -23,11 +24,13 @@ export class PlaylistComponent implements OnInit, OnDestroy {
 
   constructor(
     private dialog: MatDialog,
+    private playerService: PlayerService,
     private playlistService: PlaylistService,
     private userService: UserService
   ) {}
 
   ngOnInit(): void {
+    this.isPlaying$ = this.playerService.isPlaying$;
     this.playlist$ = this.playlistService.playlist$;
     this.playingVideo$ = this.playlistService.playingVideo$;
     this.currentUser$ = this.userService.currentUser$;
